@@ -72,7 +72,7 @@
   (into {}
         (for [name (keys &env)]
           [(list 'quote name)
-           (vary-meta name dissoc :tag) ])))
+           (vary-meta name dissoc :tag)])))
 
 
 (defn break
@@ -131,11 +131,11 @@
   code can result in a nested call to break! which will work in a reasonable
   way. Nested breaks require multiple calls to (unbreak!) to undo."
   ([]
-     `(break! "unnamed"))
+   `(break! "unnamed"))
   ([breakpoint-name]
-     `(break (current-locals)
-             ~breakpoint-name
-             ~*ns*)))
+   `(break (current-locals)
+           ~breakpoint-name
+           ~*ns*)))
 
 (defn unbreak!
   "Causes the latest breakpoint to resume execution; the repl returns to the
@@ -147,6 +147,7 @@
       (throw (Exception. "No debug-repl to unbreak from!")))
     ;; TODO: dissoc as well? (minor memory leak)
     (swap! active-debug-repls update-in [session-id :repls] pop)
+    (println "\nDebug repl resuming")
     (f)
     nil))
 
